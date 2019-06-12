@@ -70,4 +70,14 @@
  * Thing name used in all OTA base topics. Namely $aws/things/<thingName>
  */
 #define otaconfigMAX_THINGNAME_LEN              64U
+
+/**
+ * @brief The maximum number of data blocks requested.
+ *
+ * The configuration parameter is provided to configure the maximum number of data blocks that the 
+ * OTA service will send as a response to data request. This parameter is sent with each data request to 
+ * the OTA streaming service.
+ */
+#define otaconfigMAX_NUM_BLOCKS_REQUESTED       8U
+
 #endif /* _AWS_OTA_AGENT_CONFIG_H_ */

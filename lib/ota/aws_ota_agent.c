@@ -1201,7 +1201,8 @@ static OTA_Err_t prvPublishGetStreamMessage( OTA_FileContext_t * C )
                     ( int32_t ) ( OTA_FILE_BLOCK_SIZE & 0x7fffffffUL ), /* Mask to keep lint happy. It's still a constant. */
                     0,
                     C->pucRxBlockBitmap,
-                    ulBitmapLen ) )
+                    ulBitmapLen,
+                    otaconfigMAX_NUM_BLOCKS_REQUESTED) )
             {
                 ulMsgSizeToPublish = ( uint32_t ) xMsgSizeFromStream;
 
@@ -1324,6 +1325,7 @@ static void prvOTAUpdateTask( void * pvUnused )
 
     ( void ) pvUnused;
     OTA_PubMsg_t xMsgMetaData;
+    uint32_t ulNumOfBlocksRequested = otaconfigMAX_NUM_BLOCKS_REQUESTED;
 
     /* Subscribe to the OTA job notification topic. */
     if( prvSubscribeToJobNotificationTopics() == ( bool_t ) pdTRUE )
@@ -1503,6 +1505,27 @@ static void prvOTAUpdateTask( void * pvUnused )
                                         /* First reset the momentum counter since we received a good block. */
                                         pxC->ulRequestMomentum = 0;
                                         prvUpdateJobStatus( pxC, eJobStatus_InProgress, ( int32_t ) eJobReason_Receiving, ( int32_t ) NULL );
+                                        
+                                        /* Check if we have received expected number of blocks for the current request. */
+                                        if(ulNumOfBlocksRequested > 0)
+                                        {
+                                           ulNumOfBlocksRequested--;
+                                        }
+                                        else
+                                        {
+                                            /* Received number of data blocks requested so restart the request timer.*/    
+                                            prvStartRequestTimer(  pxC );
+                                            
+                                            /* Reset number of blocks for next request. */
+                                            ulNumOfBlocksRequested = otaconfigMAX_NUM_BLOCKS_REQUESTED;
+                                            
+                                            /* Send the event to request next set of data blocks.*/
+                                            if( xOTA_Agent.xOTA_EventFlags != NULL )
+                                            {
+                                                ( void ) xEventGroupSetBits( xOTA_Agent.xOTA_EventFlags, OTA_EVT_MASK_REQ_TIMEOUT );
+                                            }                                            
+                                             
+                                        }
                                     }
                                 }
                             }
