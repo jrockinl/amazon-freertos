@@ -1376,6 +1376,9 @@ static void prvOTAUpdateTask( void * pvUnused )
                 {
                     if( pxC->ulBlocksRemaining > 0U )
                     {
+                        /* Reset number of blocks for next request. */
+                        ulNumOfBlocksRequested = otaconfigMAX_NUM_BLOCKS_REQUESTED;
+                        
                         xErr = prvPublishGetStreamMessage( pxC );
 
                         if( xErr != kOTA_Err_None )
@@ -1515,9 +1518,6 @@ static void prvOTAUpdateTask( void * pvUnused )
                                         {
                                             /* Received number of data blocks requested so restart the request timer.*/    
                                             prvStartRequestTimer(  pxC );
-                                            
-                                            /* Reset number of blocks for next request. */
-                                            ulNumOfBlocksRequested = otaconfigMAX_NUM_BLOCKS_REQUESTED;
                                             
                                             /* Send the event to request next set of data blocks.*/
                                             if( xOTA_Agent.xOTA_EventFlags != NULL )
