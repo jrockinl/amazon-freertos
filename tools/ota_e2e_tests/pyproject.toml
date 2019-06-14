@@ -11,6 +11,7 @@ pyserial = "^3.4"
 junit-xml = "^1.8"
 boto3 = "^1.9"
 pyopenssl = "^18.0.0"
+awscli = "^1.16"
 
 [tool.poetry.dev-dependencies]
 
