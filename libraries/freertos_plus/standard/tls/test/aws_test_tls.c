@@ -66,6 +66,8 @@ static const uint32_t tlstestCLIENT_UNTRUSTED_PRIVATE_KEY_PEM_LENGTH = sizeof( t
 static const uint32_t tlstestCLIENT_BYOC_CERTIFICATE_PEM_LENGTH = sizeof( tlstestCLIENT_BYOC_CERTIFICATE_PEM );
 static const uint32_t tlstestCLIENT_BYOC_PRIVATE_KEY_PEM_LENGTH = sizeof( tlstestCLIENT_BYOC_PRIVATE_KEY_PEM );
 
+
+#define TLS_TEST_PRINT( X )            vLoggingPrintf X
 /*-----------------------------------------------------------*/
 
 TEST_GROUP( Full_TLS );
@@ -164,6 +166,7 @@ static void prvConnectWithProvisioning( ProvisioningParams_t * pxProvisioningPar
     }
     else
     {
+        TLS_TEST_PRINT( ("Error on line %d \r\n", __LINE__) );
     	TEST_FAIL();
     }
 
@@ -179,6 +182,7 @@ static void prvConnectWithProvisioning( ProvisioningParams_t * pxProvisioningPar
     }
     else
     {
+        TLS_TEST_PRINT( ("Error on line %d \r\n", __LINE__) );
     	TEST_FAIL();
     }
 
@@ -191,6 +195,7 @@ static void prvConnectWithProvisioning( ProvisioningParams_t * pxProvisioningPar
     }
     else
     {
+        TLS_TEST_PRINT( ("Error on line %d \r\n", __LINE__) );
     	TEST_FAIL();
     }
 
